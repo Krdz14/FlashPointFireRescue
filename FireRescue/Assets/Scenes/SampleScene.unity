@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogMode: 2
+  m_FogDensity: 0.016
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.49292454, g: 0.4952478, b: 0.5, a: 1}
@@ -1717,7 +1717,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 80615209}
-  - component: {fileID: 80615208}
   m_Layer: 0
   m_Name: Tablero generado (Rotado)
   m_TagString: Untagged
@@ -1725,33 +1724,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &80615208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 80615207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a12e4f42aae827a4ab1cbc3d41bf2387, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CreateWalls
-  celdaCompleta: {fileID: 3061735504438109093, guid: caa1efeb3ed415941843597e8e119e50, type: 3}
-  esqSuperiorRight: {fileID: 3774036654602300058, guid: 7341d5e66fdca2d40879a504223de840, type: 3}
-  esqSuperiorLeft: {fileID: 1003625423856791853, guid: 251a06eb2f46261448a824f27c420f06, type: 3}
-  esqInferiorRight: {fileID: 5018753762685404153, guid: f3744aba2f499e7478bd99c21a39c54c, type: 3}
-  esqInferiorLeft: {fileID: 7083138022749877913, guid: 5cee3a3c14b5ca949b7849a636d4e373, type: 3}
-  ArribaDerechaAbajo: {fileID: 5277960142118032434, guid: 53c010e1b97a28844bec2936e176da67, type: 3}
-  ArribaIzqAbajo: {fileID: 8802800242146782345, guid: 6001894939bea2f41be59e1308686d04, type: 3}
-  ArribaIzqDer: {fileID: 8560524782941076580, guid: dadca603363436547b1cb0839d456055, type: 3}
-  izqAbajoDer: {fileID: 2168330846323288590, guid: 8d5b493506583f445b3f9bcfb57077c6, type: 3}
-  paredArriba: {fileID: 671430053772296382, guid: 98906b86d5cdd244b8f94787fd868323, type: 3}
-  paredAbajo: {fileID: 2457816528086946542, guid: 1bb9babe4185a564badd9cbe08bd73ac, type: 3}
-  paredDerecha: {fileID: 4104666934058943163, guid: fcaeee5e399471f4eaa9a68718f0bea5, type: 3}
-  paredIzquierda: {fileID: 8272568377130620974, guid: e1ddc5f79ff38104b9443de43a17c39b, type: 3}
-  sinParedes: {fileID: 8942697444808107644, guid: cea5844f1395b7e4b9c8531c24055bd8, type: 3}
-  cellSize: 4
 --- !u!4 &80615209
 Transform:
   m_ObjectHideFlags: 0
