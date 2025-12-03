@@ -54,7 +54,7 @@ class FirefighterAgentRand(Agent):
         self.firesExtinguished = 0
         self.smokeExtinguished = 0
 
-    # Moverse hacia una posición objetivo (solo si tiene carrying=True)
+    # Moverse hacia una posición objetivo 
     def move_towards(self, target_pos):
         x, y = self.pos
         tx, ty = target_pos
@@ -68,9 +68,30 @@ class FirefighterAgentRand(Agent):
             new_y += 1
         elif y > ty:
             new_y -= 1
+        
+        old_pos = self.pos
+        new_pos = (new_x, new_y)
+        key = tuple(sorted([old_pos, new_pos]))
 
+        # Verificar si hay puerta entre ambas celdas
+        if self.model.are_connected_by_door(old_pos, new_pos):
+            door = self.model.doors[key]
+            if not door["open"]:
+                # La puerta está cerrada: abrirla cuesta 1 AP y no se mueve aún
+                self.countAP += 1
+                door["open"] = True
+                self.state = FirefighterState.MOVING
+                return  # No se mueve todavía
+
+            else:
+                # Si la puerta ya está abierta, cruza y se cierra después
+                self.model.grid.move_agent(self, new_pos)
+                door["open"] = False
+                return
+
+        # Si no hay puerta, moverse normalmente
         if 0 <= new_x < self.model.width and 0 <= new_y < self.model.height:
-            self.model.grid.move_agent(self, (new_x, new_y))
+            self.model.grid.move_agent(self, new_pos)
 
     def step(self):
         if not self.alive:
@@ -224,7 +245,7 @@ class FirefightingModel(Model):
         self.walls = {}  # {((x1,y1), (x2,y2)): damage_points}
 
         # Puertas
-        self.doors = set()  # Conjunto de pares de celdas conectadas
+        self.doors = {}  # {((x1,y1), (x2,y2)): {"open": False}}
 
         
         # Posiciones de salida (esquinas del grid)
@@ -233,6 +254,9 @@ class FirefightingModel(Model):
 
         # Inicializar grid
         self.initialize_grid()
+
+        # Inicializar puertas
+        self.initialize_doors()
 
         # DataCollector
         self.datacollector = DataCollector(
@@ -276,6 +300,42 @@ class FirefightingModel(Model):
             assignEntryTargets(firefighter, start_pos)
             self.firefighters.append(firefighter)
 
+    def initialize_doors(self):
+      """Inicializa las puertas del tablero"""
+      # Formato: (r1, c1, r2, c2) donde r=fila, c=columna
+      door_coords = [
+          (1, 3, 1, 4),
+          (2, 5, 2, 6),
+          (2, 8, 3, 8),
+          (3, 2, 3, 3),
+          (4, 4, 5, 4),
+          (4, 6, 4, 7),
+          (6, 5, 6, 6),
+          (6, 7, 6, 8)
+      ]
+      
+      for r1, c1, r2, c2 in door_coords:
+          # Convertir a coordenadas de Mesa (x, y)
+          # r (fila) va de 1-6 → x va de house_x_min a house_x_max (1-6)
+          # c (columna) va de 1-8 → y va de house_y_min a house_y_max (1-8)
+          
+          x1 = self.house_x_min + (r1 - 1)  # r1 en [1,6] → x1 en [1,6]
+          y1 = self.house_y_min + (c1 - 1)  # c1 en [1,8] → y1 en [1,8]
+          x2 = self.house_x_min + (r2 - 1)  # r2 en [1,6] → x2 en [1,6]
+          y2 = self.house_y_min + (c2 - 1)  # c2 en [1,8] → y2 en [1,8]
+          
+          # Verificar que las puertas estén dentro del área de la casa
+          if (self.house_x_min <= x1 <= self.house_x_max and 
+              self.house_y_min <= y1 <= self.house_y_max and
+              self.house_x_min <= x2 <= self.house_x_max and 
+              self.house_y_min <= y2 <= self.house_y_max):
+
+              
+                key = tuple(sorted([(x1, y1), (x2, y2)]))
+                self.doors[key] = {"open": False}
+                print(f"Puerta agregada: {key}")
+          else:
+              print(f"Puerta fuera de límites: ({x1},{y1}) ↔ ({x2},{y2})")
 
     def initialize_grid(self):
         """Inicializa el mapa con fuegos y POIs"""
@@ -304,6 +364,10 @@ class FirefightingModel(Model):
                 poi_count += 1
             attempts += 1
     
+    def are_connected_by_door(self, pos1, pos2):
+        key = tuple(sorted([pos1, pos2]))
+        return key in self.doors
+
     def step(self):
         if self.game_over:
             return
