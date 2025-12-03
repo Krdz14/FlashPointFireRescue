@@ -74,7 +74,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f4d2cc525fb64534f92a52400e620e64, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 912021259931289647}
+      addedObject: {fileID: 181909613140876465}
     - targetCorrespondingSourceObject: {fileID: 4361710834771507933, guid: f4d2cc525fb64534f92a52400e620e64, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8319739590155544501}
@@ -114,33 +114,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f4d2cc525fb64534f92a52400e620e64, type: 3}
   m_PrefabInstance: {fileID: 6578870329801375642}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &912021259931289647
-Rigidbody:
+--- !u!114 &181909613140876465
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6308907991922361035}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc015f7770ef2a4d8fa6792c14058b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FirefighterMovement
+  firefighterId: 0
+  moveSpeed: 3
 --- !u!1 &7479141220899210567 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4361710834771507933, guid: f4d2cc525fb64534f92a52400e620e64, type: 3}
