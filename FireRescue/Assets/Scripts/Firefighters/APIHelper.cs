@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 public static class APIHelper
 {
-    private const string url = "https://endif-among-human-exclusive.trycloudflare.com/unity/get_all_states";
+    private const string url = "https://these-screw-ringtone-asthma.trycloudflare.com/unity/get_all_states";
 
     public static SimulationData GetSimulationData()
     {
@@ -76,7 +76,7 @@ public static class APIHelper
     // Si no se encontró ningún step == 1
     if (firstGameStart == -1)
     {
-        Debug.LogWarning("⚠️ No se encontró ningún step == 1, devolviendo todos los estados.");
+        Debug.LogWarning("No se encontró ningún step == 1, devolviendo todos los estados.");
         return states;
     }
 

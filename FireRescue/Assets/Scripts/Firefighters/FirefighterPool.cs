@@ -7,7 +7,6 @@ public class FirefighterPool : MonoBehaviour
 
     [Header("Scene References")]
     public Transform tableroGenerado;
-    public DoorManager doorManager;
 
     [Header("Settings")]
     public GameObject firefighterPrefab;
@@ -160,11 +159,6 @@ public class FirefighterPool : MonoBehaviour
             ff.SetCarrying(data.carrying);
 
         }
-
-            if (doorManager != null)
-        {
-            doorManager.UpdateDoorsState(step);
-        }
         
         Debug.Log($"Step {step.step} ejecutado ({step.firefighters.Length} bomberos movidos).");
 
@@ -250,9 +244,6 @@ public class FirefighterPool : MonoBehaviour
             }
         }
 
-        
-
-        // 🔹 Dibuja las celdas de los bomberos (si existen)
         if (firefighterPool != null)
         {
             Gizmos.color = Color.green;
