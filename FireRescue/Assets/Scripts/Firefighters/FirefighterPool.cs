@@ -7,6 +7,7 @@ public class FirefighterPool : MonoBehaviour
 
     [Header("Scene References")]
     public Transform tableroGenerado;
+    public DoorManager doorManager;
 
     [Header("Settings")]
     public GameObject firefighterPrefab;
@@ -160,7 +161,13 @@ public class FirefighterPool : MonoBehaviour
 
         }
 
+            if (doorManager != null)
+        {
+            doorManager.UpdateDoorsState(step);
+        }
+        
         Debug.Log($"Step {step.step} ejecutado ({step.firefighters.Length} bomberos movidos).");
+
     }
 
     //  Convierte coordenadas del JSON (x,y) a coordenadas del mundo (X,Y,Z)
