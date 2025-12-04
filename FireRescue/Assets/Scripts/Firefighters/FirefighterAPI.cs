@@ -9,6 +9,13 @@ public class Position
 }
 
 [Serializable]
+public class InitialPosition
+{
+    public int x;
+    public int y;
+}
+
+[Serializable]
 public class FirefighterStats
 {
     public int saved_victims;
@@ -21,6 +28,7 @@ public class Firefighter
 {
     public int id;
     public Position position;
+    public InitialPosition initialPosition;
     public bool carrying;
     public string state;
     public int ap_used;

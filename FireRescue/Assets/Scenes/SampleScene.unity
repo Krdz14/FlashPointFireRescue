@@ -700,7 +700,7 @@ GameObject:
   m_Layer: 0
   m_Name: FirefighterPOOL
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -716,9 +716,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3563fd92b4fa4bf468ca6281c64152e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirefighterPool
+  tableroGenerado: {fileID: 80615209}
   firefighterPrefab: {fileID: 6308907991922361035, guid: 8d463c8d3cc202647b05ce81f9d66c1b, type: 3}
   stepInterval: 3
-  cellSize: 8
+  cellSize: 4
+  gridOrigin: {x: -13.13, y: 0, z: -17.34}
 --- !u!4 &26219556
 Transform:
   m_ObjectHideFlags: 0
@@ -727,8 +729,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 26219554}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.13, y: 0, z: -17.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1767,7 +1769,7 @@ GameObject:
   m_Layer: 0
   m_Name: Tablero generado (Rotado)
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1779,7 +1781,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80615207}
   serializedVersion: 2
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
   m_LocalPosition: {x: -12, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8017,7 +8019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &554749613
 Transform:
   m_ObjectHideFlags: 0
@@ -20212,7 +20214,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1338798610
 Transform:
   m_ObjectHideFlags: 0
@@ -23038,7 +23040,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1481175791
 Transform:
   m_ObjectHideFlags: 0
@@ -33468,7 +33470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2124393025
 Transform:
   m_ObjectHideFlags: 0
@@ -34644,10 +34646,10 @@ SceneRoots:
   - {fileID: 1678327186}
   - {fileID: 1452138915}
   - {fileID: 80615209}
+  - {fileID: 26219556}
   - {fileID: 360521966}
   - {fileID: 760722052}
   - {fileID: 1168063310}
   - {fileID: 1051378012}
   - {fileID: 6509319894528824307}
   - {fileID: 1287560914}
-  - {fileID: 26219556}

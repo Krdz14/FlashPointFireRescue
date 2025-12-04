@@ -5,7 +5,7 @@ using System.Linq;
 
 public static class APIHelper
 {
-    private const string url = "https://const-compensation-legislative-hiring.trycloudflare.com/unity/get_all_states";
+    private const string url = "https://endif-among-human-exclusive.trycloudflare.com/unity/get_all_states";
 
     public static SimulationData GetSimulationData()
     {

@@ -4,17 +4,29 @@ using System.Collections.Generic;
 
 public class FirefighterPool : MonoBehaviour
 {
+
+    [Header("Scene References")]
+    public Transform tableroGenerado;
+
     [Header("Settings")]
     public GameObject firefighterPrefab;
     public float stepInterval = 2f;
-    public float cellSize = 8f; // Tamaño de celda de tu grid 3D
+    public float cellSize = 2f; // Tamaño de celda de tu grid 3D
+    //public Vector3 boardCenter = new Vector3(-12f, 0f, 0f);
+
 
     private List<FirefighterMovement> firefighterPool = new();
     private State[] firstGame;
     private int currentStepIndex = 0;
 
+    [Header("Grid Origin")]
+    public Vector3 gridOrigin = new Vector3(-13.13f, 0f, -17.34f);
+    
+
     private IEnumerator Start()
     {
+        
+
         Debug.Log("📡 Cargando jugada desde API...");
         firstGame = APIHelper.GetFirstGame();
 
@@ -56,6 +68,8 @@ public class FirefighterPool : MonoBehaviour
             firefighterPool.Add(f);
         }
 
+        
+
         Debug.Log($" Pool dinámico creado con {amount} bomberos.");
     }
 
@@ -74,13 +88,20 @@ public class FirefighterPool : MonoBehaviour
 
             ff.firefighterId = fData.id;
 
-            //  Calcular posición 3D según grid
-            Vector3 worldPos = GetWorldPosition(fData);
+            Vector3 spawnPos;
 
-            ff.transform.position = worldPos;
+            if (fData.initialPosition != null)
+            {
+                spawnPos = GetWorldPositionI(fData.initialPosition, fData.id);
+            }
+            else
+            {
+                spawnPos = GetWorldPosition(fData.position, fData.id);
+            }
+
+            ff.transform.position = spawnPos;
             ff.gameObject.SetActive(true);
-
-            ff.name = $"Firefighter_{fData.id}";
+            ff.name = $"Firefighter_{fData.id}";;
         }
 
         Debug.Log($" {firstState.firefighters.Length} bomberos inicializados.");
@@ -91,43 +112,132 @@ public class FirefighterPool : MonoBehaviour
     {
         if (step.firefighters.Length != firefighterPool.Count)
         {
-            Debug.Log($"⚙️ Número de bomberos cambió ({step.firefighters.Length}), ajustando pool...");
+            Debug.Log($" Número de bomberos cambió ({step.firefighters.Length}), ajustando pool...");
             AddFirefightersToPool(step.firefighters.Length);
             InitializeFirefighters(step);
         }
 
-        for (int i = 0; i < step.firefighters.Length; i++)
+         for (int i = 0; i < step.firefighters.Length; i++)
         {
             var data = step.firefighters[i];
             var ff = firefighterPool[i];
 
-            ff.firefighterId = data.id;
+            if (ff == null)
+            {
+                Debug.LogWarning($" Bombero {i} en el pool es null, se omitirá este paso.");
+                continue;
+            }
 
-            Vector3 newPos = GetWorldPosition(data);
-            ff.MoveTo(newPos);
+            // 🔹 Calcular la posición de destino con tu método 3D
+            Vector3 targetPos = GetWorldPosition(data.position, data.id);
+
+            // 🔹 Mover al bombero a esa posición
+            ff.MoveTo(targetPos);
         }
 
-        Debug.Log($" Step {step.step} ejecutado.");
+        Debug.Log($"Step {step.step} ejecutado ({step.firefighters.Length} bomberos movidos).");
     }
 
     //  Convierte coordenadas del JSON (x,y) a coordenadas del mundo (X,Y,Z)
-    private Vector3 GetWorldPosition(Firefighter data)
+    private Vector3 GetWorldPosition(Position pos, int firefighterId)
     {
-        // Base en unidades del grid
-        float baseX = data.position.x * cellSize;
-        float baseZ = data.position.y * cellSize;
+        float baseX = pos.x * cellSize;
+        float baseZ = pos.y * cellSize;
 
         // Centrado dentro de la celda
         baseX += cellSize / 2f;
         baseZ += cellSize / 2f;
 
-        // Pequeño offset para diferenciar bomberos en la misma celda
-        float offsetX = (data.id % 2) * 0.25f;
-        float offsetZ = ((data.id / 2) % 2) * 0.25f;
+        // Pequeño offset si varios bomberos comparten la celda
+        float offsetX = (firefighterId % 2) * 0.25f;
+        float offsetZ = ((firefighterId / 2) % 2) * 0.25f;
 
         // Altura sobre el suelo
         float y = 0.5f;
 
-        return new Vector3(baseX + offsetX, y, baseZ + offsetZ);
+        // Aplica el offset global del tablero
+        Vector3 worldPos = new Vector3(baseX + offsetX, y, baseZ + offsetZ);
+        worldPos += gridOrigin;
+
+        return worldPos;
     }
+
+    private Vector3 GetWorldPositionI(InitialPosition pos, int firefighterId)
+    {
+        float baseX = pos.x * cellSize;
+        float baseZ = pos.y * cellSize;
+
+        // Centrado dentro de la celda
+        baseX += cellSize / 2f;
+        baseZ += cellSize / 2f;
+
+        // Pequeño offset si varios bomberos comparten la celda
+        float offsetX = (firefighterId % 2) * 0.25f;
+        float offsetZ = ((firefighterId / 2) % 2) * 0.25f;
+
+        // Altura sobre el suelo
+        float y = 0.5f;
+
+        // Aplica el offset global del tablero
+        Vector3 worldPos = new Vector3(baseX + offsetX, y, baseZ + offsetZ);
+        worldPos += gridOrigin;
+
+        return worldPos;
+    }
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        // 🔹 Dibuja una cuadrícula base del tablero
+        int rows = 10;   // Ajusta al número real de filas de tu grid
+        int cols = 8;   // Ajusta al número real de columnas
+        float yOffset = 0.05f; // Altura mínima para que no se superponga con el suelo
+
+        for (int x = 0; x < cols; x++)
+        {
+            for (int z = 0; z < rows; z++)
+            {
+                // Calcula el centro de cada celda según cellSize
+                Vector3 center = transform.position + new Vector3(
+                    x * cellSize + cellSize / 2f,
+                    yOffset,
+                    z * cellSize + cellSize / 2f
+                );
+
+                // Dibuja el contorno de la celda
+                Gizmos.color = Color.gray;
+                Gizmos.DrawWireCube(center, new Vector3(cellSize, 0.05f, cellSize));
+
+                if (x ==0 && z ==0)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawWireCube(center, new Vector3(cellSize, 0.05f, cellSize));
+                }
+            }
+        }
+
+        
+
+        // 🔹 Dibuja las celdas de los bomberos (si existen)
+        if (firefighterPool != null)
+        {
+            Gizmos.color = Color.green;
+            foreach (var ff in firefighterPool)
+            {
+                if (ff == null || !ff.gameObject.activeSelf) continue;
+
+                Vector3 center = ff.transform.position;
+                Gizmos.DrawWireCube(center, new Vector3(cellSize, 0.1f, cellSize));
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(center + Vector3.up * 0.05f, 0.1f);
+                Gizmos.color = Color.green;
+            }
+        }
+    }
+    #endif
+
+
 }
+
