@@ -32,7 +32,7 @@ public class Firefighter
     public bool carrying;
     public string state;
     public int ap_used;
-    public bool Opendoor; // según tu JSON
+    public int[][]? Opendoor; 
     public FirefighterStats stats;
 }
 

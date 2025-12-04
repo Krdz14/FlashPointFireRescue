@@ -10,8 +10,9 @@ public class FirefighterPool : MonoBehaviour
 
     [Header("Settings")]
     public GameObject firefighterPrefab;
+    public GameObject victimPrefab;
     public float stepInterval = 2f;
-    public float cellSize = 2f; // Tamaño de celda de tu grid 3D
+    public float cellSize = 4f; // Tamaño de celda de tu grid 3D
     //public Vector3 boardCenter = new Vector3(-12f, 0f, 0f);
 
 
@@ -21,13 +22,13 @@ public class FirefighterPool : MonoBehaviour
 
     [Header("Grid Origin")]
     public Vector3 gridOrigin = new Vector3(-13.13f, 0f, -17.34f);
+
+    public ModelPool modelPool;
     
 
     private IEnumerator Start()
     {
-        
-
-        Debug.Log("📡 Cargando jugada desde API...");
+        Debug.Log(" Cargando jugada desde API...");
         firstGame = APIHelper.GetFirstGame();
 
         if (firstGame == null || firstGame.Length == 0)
@@ -36,7 +37,19 @@ public class FirefighterPool : MonoBehaviour
             yield break;
         }
 
-        Debug.Log($" Jugada con {firstGame.Length} pasos cargada.");
+        Debug.Log($"FirefighterPool Start(): verificando referencias...");
+        Debug.Log($"modelPool: {(modelPool == null ? "NULL" : "OK")}");
+        Debug.Log($"firstGame: {(firstGame == null ? "NULL" : "OK")}");
+
+        if (firstGame != null)
+            Debug.Log($"firstGame length: {firstGame.Length}");
+
+        if (firstGame != null && firstGame.Length > 0)
+            Debug.Log($"firstGame[0].grid: {(firstGame[0].grid == null ? "NULL" : "OK")}");
+
+        // Inicializar entorno
+        int[,] grid = modelPool.ConvertTo2DArray(firstGame[0].grid);
+        modelPool.InitializeGrid(grid);
 
         // Crear pool según la cantidad de bomberos del primer step
         int firefightersCount = firstGame[0].firefighters.Length;
@@ -48,6 +61,7 @@ public class FirefighterPool : MonoBehaviour
         // Loop de simulación
         while (currentStepIndex < firstGame.Length)
         {
+            modelPool.UpdateGrid(modelPool.ConvertTo2DArray(firstGame[currentStepIndex].grid));
             UpdateFirefighterPositions(firstGame[currentStepIndex]);
             currentStepIndex++;
             yield return new WaitForSeconds(stepInterval);
@@ -66,6 +80,13 @@ public class FirefighterPool : MonoBehaviour
             go.SetActive(false);
             FirefighterMovement f = go.GetComponent<FirefighterMovement>();
             firefighterPool.Add(f);
+
+            if (victimPrefab != null)
+            {
+                GameObject victim = Instantiate(victimPrefab, transform);
+                victim.SetActive(false);
+                f.carriedVictim = victim; 
+            }
         }
 
         
@@ -101,7 +122,8 @@ public class FirefighterPool : MonoBehaviour
 
             ff.transform.position = spawnPos;
             ff.gameObject.SetActive(true);
-            ff.name = $"Firefighter_{fData.id}";;
+            ff.name = $"Firefighter_{fData.id}";
+
         }
 
         Debug.Log($" {firstState.firefighters.Length} bomberos inicializados.");
@@ -128,11 +150,14 @@ public class FirefighterPool : MonoBehaviour
                 continue;
             }
 
-            // 🔹 Calcular la posición de destino con tu método 3D
+            // Calcular la posición de destino con tu método 3D
             Vector3 targetPos = GetWorldPosition(data.position, data.id);
 
-            // 🔹 Mover al bombero a esa posición
+            // Mover al bombero a esa posición
             ff.MoveTo(targetPos);
+
+            ff.SetCarrying(data.carrying);
+
         }
 
         Debug.Log($"Step {step.step} ejecutado ({step.firefighters.Length} bomberos movidos).");
@@ -153,7 +178,7 @@ public class FirefighterPool : MonoBehaviour
         float offsetZ = ((firefighterId / 2) % 2) * 0.25f;
 
         // Altura sobre el suelo
-        float y = 0.5f;
+        float y = 0f;
 
         // Aplica el offset global del tablero
         Vector3 worldPos = new Vector3(baseX + offsetX, y, baseZ + offsetZ);
@@ -176,7 +201,7 @@ public class FirefighterPool : MonoBehaviour
         float offsetZ = ((firefighterId / 2) % 2) * 0.25f;
 
         // Altura sobre el suelo
-        float y = 0.5f;
+        float y = 0f;
 
         // Aplica el offset global del tablero
         Vector3 worldPos = new Vector3(baseX + offsetX, y, baseZ + offsetZ);

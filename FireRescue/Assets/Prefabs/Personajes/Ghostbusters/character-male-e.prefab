@@ -128,6 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FirefighterMovement
   firefighterId: 0
   moveSpeed: 3
+  carrying: 0
+  carriedVictim: {fileID: 6025121672238914257, guid: 66b66908fce7cc440b4e4d0599cbf69e, type: 3}
+  victimOffset: {x: 0, y: 0, z: -1.3}
 --- !u!1 &7479141220899210567 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4361710834771507933, guid: f4d2cc525fb64534f92a52400e620e64, type: 3}
